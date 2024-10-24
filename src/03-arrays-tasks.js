@@ -271,10 +271,9 @@ function getSecondItems(arr) {
  *  [ 'a', 'b', 'c', null ] => [ 'a', 'b','b', 'c','c','c',  null,null,null,null ]
  *  [ 1,2,3,4,5 ] => [ 1, 2,2, 3,3,3, 4,4,4,4, 5,5,5,5,5 ]
  */
-function propagateItemsByPositionIndex(/* arr */) {
-  throw new Error('Not implemented');
+function propagateItemsByPositionIndex(arr) {
+  return arr.map((elem, i) => new Array(i + 1).fill(elem)).flat();
 }
-
 
 /**
  * Returns the 3 largest numbers from the specified array
@@ -446,8 +445,12 @@ function sortCitiesArray(arr) {
  *           [0,0,0,1,0],
  *           [0,0,0,0,1]]
  */
-function getIdentityMatrix(/* n */) {
-  throw new Error('Not implemented');
+function getIdentityMatrix(n) {
+  const result = new Array(n).fill(null).map(() => new Array(n).fill(null).map(() => 0));
+  return result.map((row, i) => row.map((_, j) => {
+    if (i === j) return 1;
+    return 0;
+  }));
 }
 
 /**
@@ -534,10 +537,9 @@ function group(/* array, keySelector, valueSelector */) {
  *   [[1, 2], [3, 4], [5, 6]], (x) => x     =>   [ 1, 2, 3, 4, 5, 6 ]
  *   ['one','two','three'], (x) => x.split('')  =>   ['o','n','e','t','w','o','t','h','r','e','e']
  */
-function selectMany(/* arr, childrenSelector */) {
-  throw new Error('Not implemented');
+function selectMany(arr, childrenSelector) {
+  return arr.flatMap(childrenSelector);
 }
-
 
 /**
  * Returns an element from the multidimensional array by the specified indexes.
@@ -550,11 +552,10 @@ function selectMany(/* arr, childrenSelector */) {
  *   [[1, 2], [3, 4], [5, 6]], [0,0]  => 1        (arr[0][0])
  *   ['one','two','three'], [2]       => 'three'  (arr[2])
  *   [[[ 1, 2, 3]]], [ 0, 0, 1 ]      => 2        (arr[0][0][1])
- */
-function getElementByIndexes(/* arr, indexes */) {
-  throw new Error('Not implemented');
+ *//*  */
+function getElementByIndexes(arr, indexes) {
+  return arr.flat(indexes.length)[indexes[indexes.length - 1]];
 }
-
 
 /**
  * Swaps the head and tail of the specified array:
@@ -574,10 +575,16 @@ function getElementByIndexes(/* arr, indexes */) {
  *   [ 1, 2, 3, 4, 5, 6, 7, 8 ]   =>  [ 5, 6, 7, 8, 1, 2, 3, 4 ]
  *
  */
-function swapHeadAndTail(/* arr */) {
-  throw new Error('Not implemented');
+function swapHeadAndTail(arr) {
+  const middle = Math.floor(arr.length / 2);
+  if (middle) {
+    const middleElem = arr[middle];
+    const head = arr.slice(0, middle);
+    const tail = arr.slice(-middle);
+    return arr.length % 2 === 0 ? tail.concat(head) : tail.concat(middleElem, head);
+  }
+  return arr;
 }
-
 
 module.exports = {
   findElement,
