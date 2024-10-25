@@ -124,8 +124,11 @@ function isTriangle(a, b, c) {
  *   { top:20, left:20, width: 20, height: 20 }    =>  false
  *
  */
-function doRectanglesOverlap(/* rect1, rect2 */) {
-  throw new Error('Not implemented');
+function doRectanglesOverlap(rect1, rect2) {
+  return !(rect1.left + rect1.width <= rect2.left
+    || rect2.left + rect2.width <= rect1.left
+    || rect1.top + rect1.height <= rect2.top
+    || rect2.top + rect2.height <= rect1.top);
 }
 
 
@@ -155,10 +158,9 @@ function doRectanglesOverlap(/* rect1, rect2 */) {
  *   { center: { x:0, y:0 }, radius:10 },  { x:10, y:10 }   => false
  *
  */
-function isInsideCircle(/* circle, point */) {
-  throw new Error('Not implemented');
+function isInsideCircle(circle, point) {
+  return (point.x - circle.center.x) ** 2 + (point.y - circle.center.y) ** 2 < circle.radius ** 2;
 }
-
 
 /**
  * Returns the first non repeated char in the specified strings otherwise returns null.
@@ -315,8 +317,26 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  const brackets = {
+    '[': ']',
+    '(': ')',
+    '{': '}',
+    '<': '>',
+  };
+  const openedBrackets = [];
+  for (let i = 0; i < str.length; i += 1) {
+    const char = str[i];
+    if (brackets[char]) {
+      openedBrackets.push(char);
+    } else if (Object.values(brackets).includes(char)) {
+      const lastOpened = openedBrackets.pop();
+      if (brackets[lastOpened] !== char) {
+        return false;
+      }
+    }
+  }
+  return openedBrackets.length === 0;
 }
 
 
@@ -356,8 +376,18 @@ function toNaryString(num, n) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const parts = pathes[0].split('/');
+  for (let i = 0; i < parts.length; i += 1) {
+    const currentPart = parts[i];
+    for (let j = 1; j < pathes.length; j += 1) {
+      const otherParts = pathes[j].split('/');
+      if (otherParts[i] !== currentPart) {
+        return parts.slice(0, i).join('/') + (i > 0 ? '/' : '');
+      }
+    }
+  }
+  return `${parts.join('/')}/`;
 }
 
 
@@ -379,10 +409,20 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const result = [];
+  for (let i = 0; i < m1.length; i += 1) {
+    result[i] = [];
+    for (let j = 0; j < m2[0].length; j += 1) {
+      let sum = 0;
+      for (let k = 0; k < m2.length; k += 1) {
+        sum += m1[i][k] * m2[k][j];
+      }
+      result[i][j] = sum;
+    }
+  }
+  return result;
 }
-
 
 /**
  * Returns the evaluation of the specified tic-tac-toe position.
